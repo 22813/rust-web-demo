@@ -12,7 +12,8 @@ extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate time;
 extern crate handlebars_iron;
-
+extern crate term;
+extern crate logger;
 
 use iron::prelude::*;
 
@@ -33,9 +34,16 @@ use r2d2_postgres::{PostgresConnectionManager,SslMode};
 use framework::{middleware,database};
 use controllers::{user};
 
+use logger::Logger;
+use logger::format::Format;
+use logger::format::FormatAttr::FunctionAttrs;
+use term::Attr;
+
 pub mod framework;
 pub mod controllers;
 pub mod models;
+
+static FORMAT: &'static str = "@[red A]Uri: {uri}@, @[blue blink underline]Method: {method}@, @[yellow standout]Status: {status}@, @[brightgreen]Time: {response-time}@";
 
 
 pub fn run(){
@@ -66,6 +74,16 @@ pub fn run(){
     middleware.link_after(middleware::MyMiddleware);
     middleware.link_around(middleware::MyMiddleware);
 
+    fn attrs(req: &Request, _res: &Response) -> Vec<term::Attr> {
+        match format!("{}", req.url).as_ref() {
+            "/" => vec![Attr::Blink],
+            _ => vec![]
+        }
+    }
+
+    let format = Format::new(FORMAT, vec![], vec![FunctionAttrs(attrs)]);
+    middleware.link(Logger::new(Some(format.unwrap())));
+    
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);
     println!("Listening on http://{}", host);
     Iron::new(middleware).http(host).unwrap();
