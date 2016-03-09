@@ -1,7 +1,13 @@
 [package]
 name = "iron_web_demo"
 version = "0.1.0"
-authors = ["u"]
+description = " Rust web demo based on iron"
+readme = "README.md"
+repository = "https://github.com/hikelee/rust-web-demo"
+license = "MIT"
+authors = [
+    "Hike Li <hikelee@gmail.com>"
+]
 
 [dependencies]
 iron="*"
