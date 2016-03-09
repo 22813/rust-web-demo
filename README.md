@@ -1,25 +1,29 @@
 rust-web-demo
 ====
 
-###Env
+### env
 ```sh
-cargo --version
+$ cargo --version
  cargo 0.8.0-nightly (28a0cbb 2016-01-17)
 
-rustc --version
+$ rustc --version
  rustc 1.7.0 (a5d1e7a59 2016-02-29)
 
-uname -a
+$ uname -a
  Linux u 4.2.0-30-generic #36-Ubuntu SMP Fri Feb 26 00:58:07 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
  
-git clone https://github.com/hikelee/rust-web-demo.git
+$ git clone https://github.com/hikelee/rust-web-demo.git
 
-cd rust-web-demo
-cat src/sql/init.sql
+$ cd rust-web-demo
+$ cat src/sql/init.sql
 
-cargo run
+$ cargo run
 ```
 
-###Test 
-http://localhost:8080/user/list
-http://localhost:8080/user/handlebars
+### test 
+```sh
+$w3m http://localhost:8080/user/list
+
+$w3m http://localhost:8080/user/handlebars
+
+```
