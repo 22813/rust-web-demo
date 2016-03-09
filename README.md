@@ -22,8 +22,9 @@ $ cargo run
 
 ### test 
 ```sh
-$ w3m http://localhost:8080/user/list
+$ curl http://localhost:8080/user/list
 
-$ w3m http://localhost:8080/user/handlebars
+$ curl http://localhost:8080/user/handlebars
 
+$ curl http://localhost:8080/user/urlencoded?name=franklin&name=trevor&age=1
 ```

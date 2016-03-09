@@ -14,6 +14,7 @@ use handlebars_iron::{Template};
 use models::user::User;
 use framework::database::AppDb;
 
+use urlencoded::UrlEncodedQuery;
 pub struct UserController;
 
 pub struct HitCounter;
@@ -42,6 +43,18 @@ impl UserController{
         response.set_mut(Template::new("index", data));
         response.set_mut(status::Ok);
         Ok(response)
+    }
+
+    pub fn urlencoded(req: &mut Request) -> IronResult<Response> {
+        match req.get_ref::<UrlEncodedQuery>() {
+            Ok(ref hashmap) =>{
+                println!("Parsed GET request query string:\n {:?}", hashmap);
+                return Ok(Response::with((status::Ok, format!("params: {:?}", hashmap)))) ;
+            },
+            Err(ref e) => println!("{:?}", e)
+        };
+        Ok(Response::with((status::Ok, "hello" )))
+
     }
     pub fn posts(req: &mut Request) -> IronResult<Response> {
         let ref post_id = req.extensions.get::<Router>().unwrap().find("post_id").unwrap_or("none");

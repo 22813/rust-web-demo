@@ -5,6 +5,7 @@ extern crate iron;
 extern crate persistent;
 extern crate router;
 extern crate mount;
+extern crate urlencoded;
 extern crate staticfile;
 
 extern crate r2d2;
@@ -50,6 +51,7 @@ pub fn run(){
     router.get("/user/posts/:post_id",user::UserController:: posts);
     router.get("/user/hits", user::UserController::hits);
     router.get("/user/list",user::UserController::list);
+    router.get("/user/urlencoded",user::UserController::urlencoded);
 
     let mut mount = Mount::new();
     mount.mount("/", router);
