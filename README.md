@@ -22,8 +22,8 @@ $ cargo run
 
 ### test 
 ```sh
-$w3m http://localhost:8080/user/list
+$ w3m http://localhost:8080/user/list
 
-$w3m http://localhost:8080/user/handlebars
+$ w3m http://localhost:8080/user/handlebars
 
 ```
