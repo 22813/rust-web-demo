@@ -10,6 +10,7 @@ authors = [
 ]
 
 [dependencies]
+##rand="*"
 term="*"
 iron="*"
 time="*"
@@ -20,6 +21,7 @@ router="*"
 mount = "*"
 staticfile="*"
 handlebars-iron="*"
+rust-crypto = "^0.2"
 rustc-serialize = "*"
 persistent="*"
 hyper="*"

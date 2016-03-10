@@ -13,7 +13,7 @@ use handlebars_iron::{Template};
 
 use models::user::User;
 use framework::database::AppDb;
-
+use utils::crypto;
 use urlencoded::UrlEncodedQuery;
 pub struct UserController;
 
@@ -21,9 +21,6 @@ pub struct HitCounter;
 impl Key for HitCounter{type Value=usize;}
 
 impl UserController{
-    pub fn new()->Self{
-        UserController
-    }
     pub fn env(_: &mut Request) -> IronResult<Response> {
         let powered_by:String = match env::var("POWERED_BY") {
             Ok(val) => val,
@@ -67,17 +64,35 @@ impl UserController{
         *count += 1;
         Ok(Response::with((status::Ok, format!("Hits: {}", *count))))
     } 
-
-    pub fn list(req:&mut Request)->IronResult<Response>{
+    fn get_json_data(req:&mut Request)->String{
         let conn = req.get::<Read<AppDb>>().unwrap().get().unwrap();
         let users=User::list_all(conn);
         println!("{:?}",users);
         let mut data = BTreeMap::new();
         data.insert("users".to_string(), users.to_json());
-        let encoded = json::encode(&data).unwrap();
+        let data = json::encode(&data).unwrap();
+        data 
+    }
+    fn get_response(data:&str)->IronResult<Response>{
         let mut response = Response::new();
         response.set_mut(status::Ok);
-        response.set_mut(encoded);
+        response.set_mut(data);
         Ok(response)
+    }
+    pub fn list_aes(req:&mut Request)->IronResult<Response>{
+        let data =Self::get_json_data(req);
+        let data=crypto::aes_encrypt_string(&data);
+        let data=crypto::base64_encode_bytes(&data.ok().unwrap());
+        let data=data.expect("");
+        Self::get_response(&data)
+    }
+    pub fn list_base64(req:&mut Request)->IronResult<Response>{
+        let data =Self::get_json_data( req);
+        let data=crypto::base64_encode_string(&data).expect("");
+        Self::get_response(&data)
+    }
+    pub fn list(req:&mut Request)->IronResult<Response>{
+        let data =Self::get_json_data( req);
+        Self::get_response(&data)
     }
 }

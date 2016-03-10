@@ -1,4 +1,5 @@
 extern crate postgres;
+//extern crate rand;
 extern crate rustc_serialize;
 
 extern crate iron;
@@ -14,6 +15,7 @@ extern crate time;
 extern crate handlebars_iron;
 extern crate term;
 extern crate logger;
+extern crate crypto;
 
 use iron::prelude::*;
 
@@ -42,6 +44,7 @@ use term::Attr;
 pub mod framework;
 pub mod controllers;
 pub mod models;
+pub mod utils;
 
 static FORMAT: &'static str = "@[red A]Uri: {uri}@, @[blue blink underline]Method: {method}@, @[yellow standout]Status: {status}@, @[brightgreen]Time: {response-time}@";
 
@@ -59,6 +62,8 @@ pub fn run(){
     router.get("/user/posts/:post_id",user::UserController:: posts);
     router.get("/user/hits", user::UserController::hits);
     router.get("/user/list",user::UserController::list);
+    router.get("/user/list-base64",user::UserController::list_base64);
+    router.get("/user/list-aes",user::UserController::list_aes);
     router.get("/user/urlencoded",user::UserController::urlencoded);
 
     let mut mount = Mount::new();
