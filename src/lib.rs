@@ -16,6 +16,8 @@ extern crate handlebars_iron;
 extern crate term;
 extern crate logger;
 extern crate crypto;
+extern crate hyper;
+extern crate chrono;
 
 use iron::prelude::*;
 
@@ -34,7 +36,7 @@ use r2d2::{Config,Pool};
 use r2d2_postgres::{PostgresConnectionManager,SslMode};
 
 use framework::{middleware,database};
-use controllers::{user};
+use controllers::{user,task};
 
 use logger::Logger;
 use logger::format::Format;
@@ -57,14 +59,18 @@ pub fn run(){
     println!("Connected to postgres with pool: {:?}", pool);
 
     let mut router = Router::new();
-    router.get("/user/env", user::UserController::env);
-    router.get("/user/handlebars", user::UserController::handlebars);
-    router.get("/user/posts/:post_id",user::UserController:: posts);
-    router.get("/user/hits", user::UserController::hits);
-    router.get("/user/list",user::UserController::list);
-    router.get("/user/list-base64",user::UserController::list_base64);
-    router.get("/user/list-aes",user::UserController::list_aes);
-    router.get("/user/urlencoded",user::UserController::urlencoded);
+    router.get("/user/env", user::env);
+    router.get("/user/hits", user::hits);
+    router.get("/user/list",user::list);
+    router.get("/user/list-base64",user::list_base64);
+    router.get("/user/list-aes",user::list_aes);
+
+
+    router.get("/task/",task::list);
+    router.get("/task/new",task::new);
+    router.get("/task/:id",task::edit);
+    router.get("/task/delete/:id",task::delete);
+    router.post("/task/",task::save);
 
     let mut mount = Mount::new();
     mount.mount("/", router);

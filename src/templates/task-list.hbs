@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Task List</title>
+<link rel="stylesheet" type="text/css" href="/static/app.css">
+</head>
+<body>
+    <a href="/task/new/">Create</a><br/>
+    <table border=1>
+        {{#each tasks}}
+        <tr>
+            <td><a href="/task/{{id}}">{{id}}</a></td>
+            <td>{{name}}</td>
+            <td>{{content}}</td>
+            <td>{{create_time}}</td>
+            <td>{{update_time}}</td>
+            <td>{{status}}</td>
+            <td><a href="/task/delete/{{id}}">delete</a></td>
+        </tr>
+        {{/each}}
+    </table>
+        <script type="text/javascript" src="/static/app.js"></script>
+</body>
+</html>

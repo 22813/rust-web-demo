@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Task List</title>
+<link rel="stylesheet" type="text/css" href="/static/app.css">
+</head>
+<body>
+<form method="post" action="/task/">
+<input type="hidden" name="id"  />
+<table border=1>
+    <tr><td>name:</td><td><input type="text" name="name" /></td></tr>
+    <tr><td>content:</td><td><input type="text" name="content" /></td></tr>
+    <tr><td>status:</td><td><input type="text" name="status" /></td></tr>
+</table>
+<input type="submit" value="Save"/>
+</form>
+</body>
+</html>
