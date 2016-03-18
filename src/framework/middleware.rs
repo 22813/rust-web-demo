@@ -14,8 +14,10 @@ impl BeforeMiddleware for MyMiddleware{
 
 impl AfterMiddleware for MyMiddleware{
     fn after(&self ,req: &mut Request,res:Response)->IronResult<Response>{
-        let delta=time::precise_time_ns()-*req.extensions.get::<MyMiddleware>().unwrap();
-        println!("Request url:{}, took: {} ms",req.url.path.join("/"),(delta as f64)/1000000.0);
+        if req.url.path.join("/").contains("task"){
+            let delta=time::precise_time_ns()-*req.extensions.get::<MyMiddleware>().unwrap();
+            println!("Request url:{}, took: {} ms",req.url.path.join("/"),(delta as f64)/1000000.0);
+        }
         Ok(res)
     }
 }
@@ -29,7 +31,10 @@ impl AroundMiddleware for MyMiddleware {
                 let entry = time::precise_time_ns();
                 let res = self.handler.handle(req);
                 let time=time::precise_time_ns()-entry;
-                println!("Request: {:?}\nResponse: {:?}\nResponse-Time: {}", req, res, time);
+                let path=req.url.path.join("/");
+                if path.contains("task") {
+                    println!("Request: {:?}\nResponse: {:?}\nResponse-Time: {}", req, res, time);
+                }
                 res
             }
         }
