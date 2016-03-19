@@ -1,24 +1,57 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Task List</title>
-</head>
-<body>
-    <a href="/task/new/">Create</a><br/>
-    <a href="/account/logout/">Logout</a><br/>
-    <table border=1>
-        {{#each tasks}}
-        <tr>
-            <td><a href="/task/{{id}}">{{id}}</a></td>
-            <td>{{name}}</td>
-            <td>{{content}}</td>
-            <td>{{create_time}}</td>
-            <td>{{update_time}}</td>
-            <td>{{status}}</td>
-            <td><a href="/task/delete/{{id}}">delete</a></td>
-        </tr>
-        {{/each}}
-    </table>
-        <script type="text/javascript" src="/static/app.js"></script>
-</body>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="http://v3.bootcss.com/favicon.ico">
+        <title>Task List</title>
+        <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link href="http://v3.bootcss.com/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="http://v3.bootcss.com/examples/theme/theme.css" rel="stylesheet">
+        <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+    </head>
+    <body >
+        <div class="page-header">
+            <h1>Task List</h1>
+        </div>
+        <p>
+        <a class="btn btn-success" href="/task/new/">Create</a>
+        <a class="btn btn-default" href="/account/logout/">Logout</a>
+        </p>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Content</th>
+                            <th>Create time</th>
+                            <th>Update time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each tasks}}
+                        <tr>
+                            <td><a href="/task/{{id}}">{{id}}</a></td>
+                            <td>{{name}}</td>
+                            <td>{{content}}</td>
+                            <td>{{create_time}}</td>
+                            <td>{{update_time}}</td>
+                            <td>{{status}}</td>
+                            <td><a href="/task/delete/{{id}}">delete</a></td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="http://v3.bootcss.com/assets/js/docs.min.js"></script>
+        <script src="http://v3.bootcss.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+    </body>
 </html>
+
