@@ -11,8 +11,8 @@ use chrono::*;
 use models::task::Task;
 use iron::{status};
 
-use utils::{request,response};
-
+use utils::{response};
+use utils::request::*;
 pub fn list(req: &mut Request) -> IronResult<Response> {
     let conn=database::get_conn(req);
     let tasks=Task::list(conn);
@@ -25,7 +25,7 @@ pub fn new(_: &mut Request) -> IronResult<Response> {
     response::template("task-new","".to_owned())
 }
 pub fn delete(req: &mut Request) -> IronResult<Response> {
-    let id=request::get_path_param(req,"id").unwrap_or("0".to_owned());
+    let id=req.get_path_param("id").unwrap_or("0".to_owned());
     let id=i32::from_str(&*id).unwrap_or(0);
     if id>0{
         Task::delete(database::get_conn(req),id);
@@ -33,7 +33,7 @@ pub fn delete(req: &mut Request) -> IronResult<Response> {
     response::redirect(req,"/task/")
 }
 pub fn edit(req: &mut Request) -> IronResult<Response> {
-    let id=request::get_path_param(req,"id").unwrap_or("0".to_owned());
+    let id=req.get_path_param("id").unwrap_or("0".to_owned());
     let id=i32::from_str(&*id).unwrap_or(0);
     let mut response = Response::new();
     response.set_mut(status::Ok);
@@ -48,11 +48,11 @@ pub fn edit(req: &mut Request) -> IronResult<Response> {
     Ok(response)
 }
 pub fn save(req: &mut Request) -> IronResult<Response> {
-    let name=request::get_form_param(req,"name"); 
-    let content=request::get_form_param(req,"content");
-    let status=request::get_form_param(req,"status").unwrap_or("0".to_owned());
+    let name=req.get_form_param("name"); 
+    let content=req.get_form_param("content");
+    let status=req.get_form_param("status").unwrap_or("0".to_owned());
     let time:DateTime<Local>=Local::now();
-    let id=request::get_form_param(req,"id").unwrap_or("0".to_owned());
+    let id=req.get_form_param("id").unwrap_or("0".to_owned());
     let task=Task{
         id:             i32::from_str(&*id).unwrap_or(0),
         name:           name,

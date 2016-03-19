@@ -3,8 +3,8 @@ use iron_login::User;
 use iron::modifiers::Redirect;
 use iron::{Url, status};
 
-use utils::{request,response};
-
+use utils::{response};
+use utils::request::*;
 #[derive(Debug)]
 struct Account(String);
 impl Account {
@@ -42,7 +42,7 @@ pub fn login(_: &mut Request) -> IronResult<Response> {
 
 pub fn do_login(req: &mut Request) -> IronResult<Response> {
     let login = Account::get_login(req);
-    let name=request::get_form_param(req,"name");
+    let name=req.get_form_param("name");
     //let password=request::get_form_param(req,"password");
     let ref url=req.url;
     if let Some(name)=name{ 
