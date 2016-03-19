@@ -3,12 +3,9 @@ use iron_login::User;
 use iron::modifiers::Redirect;
 use iron::{Url, status};
 
-use std::cell::RefCell;
-
 use handlebars_iron::{Template};
 
-//use framework::database;
-use urlencoded::{UrlEncodedBody};
+use utils::{request,response};
 
 #[derive(Debug)]
 struct Account(String);
@@ -50,8 +47,8 @@ pub fn login(_: &mut Request) -> IronResult<Response> {
 
 pub fn do_login(req: &mut Request) -> IronResult<Response> {
     let login = Account::get_login(req);
-    let name=get_form_param(req,"name");
-    //let password=get_form_param(req,"password");
+    let name=request::get_form_param(req,"name");
+    //let password=request::get_form_param(req,"password");
     let ref url=req.url;
     if let Some(name)=name{ 
         //return Ok(Response::new() .set(::iron::status::Ok) .set(format!("User set to '{}'", name)).set(login.log_in(Account::new(&name))))
@@ -59,23 +56,5 @@ pub fn do_login(req: &mut Request) -> IronResult<Response> {
         let response=Response::with((status::Found, Redirect(url.clone()))).set(login.log_in(Account::new(&name)));
         return Ok(response);
     }
-    let url = Url::parse(format!("{}://{}:{}/account/login/",url.scheme,url.host,url.port).as_str()).unwrap();
-    Ok(Response::with((status::Found, Redirect(url.clone()))))
-}
-fn get_form_param(req:&mut Request,name:&str)->Option<String>{
-    let query=RefCell::new(req.get_ref::<UrlEncodedBody>()).into_inner();
-    //let query=RefCell::new(req.get_ref::<UrlEncodedQuery>()).into_inner();
-    if let Ok(ref hashmap)=query{
-        if let Some(vec)=hashmap.get(name){
-            if vec.len()>0{
-                let value=&vec[0];
-                if value.len()>0{
-                    let mut result=String::new();
-                    result.push_str(value.as_str());
-                    return Some(result);
-                }
-            }
-        }
-    }
-    None
+    response::redirect(req,"/account/login/")
 }
