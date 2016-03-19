@@ -37,7 +37,7 @@ use r2d2::{Config,Pool};
 use r2d2_postgres::{PostgresConnectionManager,SslMode};
 
 use framework::{middleware,database};
-use controllers::{user,task,account};
+use controllers::{task,account};
 
 use logger::Logger;
 use logger::format::Format;
@@ -60,12 +60,6 @@ pub fn run(){
     println!("Connected to postgres with pool: {:?}", pool);
 
     let mut router = Router::new();
-    router.get("/user/env", user::env);
-    router.get("/user/hits", user::hits);
-    router.get("/user/list",user::list);
-    router.get("/user/list-base64",user::list_base64);
-    router.get("/user/list-aes",user::list_aes);
-
 
     router.get("/task/",task::list);
     router.get("/task/new",task::new);
