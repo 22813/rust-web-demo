@@ -18,6 +18,7 @@ extern crate logger;
 extern crate crypto;
 extern crate hyper;
 extern crate chrono;
+extern crate iron_login;
 
 use iron::prelude::*;
 
@@ -36,7 +37,7 @@ use r2d2::{Config,Pool};
 use r2d2_postgres::{PostgresConnectionManager,SslMode};
 
 use framework::{middleware,database};
-use controllers::{user,task};
+use controllers::{user,task,account};
 
 use logger::Logger;
 use logger::format::Format;
@@ -72,18 +73,25 @@ pub fn run(){
     router.get("/task/delete/:id",task::delete);
     router.post("/task/",task::save);
 
+    router.post("/account/login/",account::do_login);
+    router.get("/account/login/",account::login);
+    router.get("/account/logout/",account::logout);
+
     let mut mount = Mount::new();
     mount.mount("/", router);
     mount.mount("/static", Static::new(Path::new("./src/static/")));
 
-    let mut middleware = Chain::new(mount);
-    //middleware.link(Write::<HitCounter>::both(0));
-    middleware.link(Read::<database::AppDb>::both(pool));
-    middleware.link_after(HandlebarsEngine::new("./src/templates", ".hbs"));
+    let mut chain = Chain::new(mount);
+    //chain.link(Write::<HitCounter>::both(0));
+    chain.link(Read::<database::AppDb>::both(pool));
+    chain.link_after(HandlebarsEngine::new("./src/templates", ".hbs"));
 
-    middleware.link_before(middleware::MyMiddleware);
-    middleware.link_after(middleware::MyMiddleware);
-    middleware.link_around(middleware::MyMiddleware);
+    chain.link_before(middleware::MyMiddleware);
+    chain.link_after(middleware::MyMiddleware);
+    chain.link_around(middleware::MyMiddleware);
+
+    let cookie_signing_key = b"My Secret Key"[..].to_owned();
+    chain.link_around(iron_login::LoginManager::new(cookie_signing_key));
 
     fn attrs(req: &Request, _res: &Response) -> Vec<term::Attr> {
         match format!("{}", req.url).as_ref() {
@@ -93,9 +101,9 @@ pub fn run(){
     }
 
     let format = Format::new(FORMAT, vec![], vec![FunctionAttrs(attrs)]);
-    middleware.link(Logger::new(Some(format.unwrap())));
-    
+    chain.link(Logger::new(Some(format.unwrap())));
+
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);
     println!("Listening on http://{}", host);
-    Iron::new(middleware).http(host).unwrap();
+    Iron::new(chain).http(host).unwrap();
 }

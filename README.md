@@ -22,9 +22,6 @@ $ cargo run
 
 ### test 
 ```sh
-$ curl http://localhost:8080/user/list
+$ firefox http://localhost:8080/task/
 
-$ curl http://localhost:8080/user/handlebars
-
-$ curl http://localhost:8080/user/urlencoded?name=franklin&name=trevor&age=1
 ```
