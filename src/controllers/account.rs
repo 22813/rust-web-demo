@@ -3,8 +3,6 @@ use iron_login::User;
 use iron::modifiers::Redirect;
 use iron::{Url, status};
 
-use handlebars_iron::{Template};
-
 use utils::{request,response};
 
 #[derive(Debug)]
@@ -39,10 +37,7 @@ pub fn check_login(req:&mut Request)->bool{
 }
 
 pub fn login(_: &mut Request) -> IronResult<Response> {
-    let mut response = Response::new();
-    response.set_mut(Template::new("account-login","".to_owned()));
-    response.set_mut(status::Ok);
-    Ok(response)
+    response::template("account-login","".to_owned())
 }
 
 pub fn do_login(req: &mut Request) -> IronResult<Response> {
