@@ -57,6 +57,6 @@ pub fn do_login(req: &mut Request) -> IronResult<Response> {
         return Ok(response)
     }
     let mut data = BTreeMap::new();
-    data.insert("error".to_string(),"login name or password incorrect!".to_owned());
+    data.insert("error".to_string(),true);
     response::template("account-login",data)
 }
