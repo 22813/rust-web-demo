@@ -62,6 +62,9 @@ pub fn run(){
     let mut router = Router::new();
 
     router.get("/task/",task::list);
+    router.get("/task/json/",task::list_json);
+    router.get("/task/json/aes/",task::list_json_aes);
+    router.get("/task/json/base64/",task::list_json_base64);
     router.get("/task/new",task::new);
     router.get("/task/:id",task::edit);
     router.get("/task/delete/:id",task::delete);

@@ -1,24 +1,50 @@
 use std::collections::BTreeMap;
 use std::str::FromStr;
 use rustc_serialize::json::{ToJson};
-
+use rustc_serialize::json;
+use chrono::*;
 use iron::prelude::*;
+use iron::{status};
 use handlebars_iron::{Template};
 
 use framework::database;
-//use urlencoded::{UrlEncodedBody,UrlEncodedQuery};
-use chrono::*;
 use models::task::Task;
-use iron::{status};
-
 use utils::{response};
 use utils::request::*;
+use utils::crypto;
+
 pub fn list(req: &mut Request) -> IronResult<Response> {
-    let conn=database::get_conn(req);
-    let tasks=Task::list(conn);
+    let tasks=Task::list(database::get_conn(req));
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
     response::template("task-list",data)
+}
+
+pub fn list_json(req:&mut Request)->IronResult<Response>{
+    let tasks=Task::list(database::get_conn(req));
+    let mut data = BTreeMap::new();
+    data.insert("tasks".to_string(), tasks.to_json());
+    let data = json::encode(&data).unwrap();
+    response::json_response(&data)
+}
+
+pub fn list_json_base64(req:&mut Request)->IronResult<Response>{
+    let tasks=Task::list(database::get_conn(req));
+    let mut data = BTreeMap::new();
+    data.insert("tasks".to_string(), tasks.to_json());
+    let data = json::encode(&data).unwrap();
+    let data=crypto::base64_encode_string(&data).expect("");
+    response::json_response(&data)
+}
+pub fn list_json_aes(req:&mut Request)->IronResult<Response>{
+    let tasks=Task::list(database::get_conn(req));
+    let mut data = BTreeMap::new();
+    data.insert("tasks".to_string(), tasks.to_json());
+    let data = json::encode(&data).unwrap();
+    let data=crypto::aes_encrypt_string(&data);
+    let data=crypto::base64_encode_bytes(&data.ok().unwrap());
+    let data=data.expect("");
+    response::json_response(&data)
 }
 
 pub fn new(_: &mut Request) -> IronResult<Response> {
@@ -78,16 +104,4 @@ pub fn hits(req: &mut Request) -> IronResult<Response> {
     *count += 1;
     Ok(Response::with((status::Ok, format!("Hits: {}", *count))))
 } 
-pub fn list_aes(req:&mut Request)->IronResult<Response>{
-    let data =get_json_data(req);
-    let data=crypto::aes_encrypt_string(&data);
-    let data=crypto::base64_encode_bytes(&data.ok().unwrap());
-    let data=data.expect("");
-    compose_response(&data)
-}
-pub fn list_base64(req:&mut Request)->IronResult<Response>{
-    let data =get_json_data( req);
-    let data=crypto::base64_encode_string(&data).expect("");
-    compose_response(&data)
-}
 */
