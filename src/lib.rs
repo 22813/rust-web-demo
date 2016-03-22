@@ -19,6 +19,7 @@ extern crate crypto;
 extern crate hyper;
 extern crate chrono;
 extern crate iron_login;
+extern crate regex;
 
 use iron::prelude::*;
 
