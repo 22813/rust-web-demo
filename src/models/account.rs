@@ -1,6 +1,4 @@
-use framework::database::PostgresPooledConnection;
-use postgres::rows::*;
-
+use models::prelude::*;
 #[derive(Default, Debug)]
 pub struct Account {
    pub id: i32,
@@ -17,7 +15,7 @@ impl Account {
         account
     }
     pub fn get(conn:
-               PostgresPooledConnection,name:Option<String>,password:Option<String>)->Option<Account>  {
+               Conn,name:Option<String>,password:Option<String>)->Option<Account>  {
         for row in &conn.query("SELECT * from account where name=$1 and password=$2", &[&name,&password]).unwrap() {
             return Some(Self::new(row));
         }

@@ -1,9 +1,4 @@
-use framework::database::PostgresPooledConnection;
-use std::collections::BTreeMap;
-use rustc_serialize::json::{ToJson, Json};
-use postgres::rows::*;
-use chrono::*;
-
+use models::prelude::*;
 
 #[derive(Default, Debug)]
 pub struct Task {
@@ -15,7 +10,11 @@ pub struct Task {
    pub status: i32,//0:new,1:ongoing,2:finished,3:canceld
 }
 
-
+const DELETE_SQL:&'static str="delete from task where id=$1";
+const LIST_SQL:&'static str="SELECT * from task order by id desc";
+const GET_SQL:&'static str="SELECT * from task where id=$1";
+const UPDATE_SQL:&'static str="update task set name=$1,content=$2,update_time=$3,status=$4 where id=$5";
+const CREATE_SQL:&'static str="insert into task(name,content,create_time,update_time,status) values($1,$2,$3,$4,$5)";
 impl ToJson for Task {
     fn to_json(&self) -> Json {
         let mut m: BTreeMap<String, Json> = BTreeMap::new();
@@ -43,29 +42,27 @@ impl Task {
         task.status=row.get("status");
         task
     }
-    pub fn list(conn: PostgresPooledConnection) -> Vec<Task> {
+    pub fn list(conn: Conn) -> Vec<Task> {
         let mut tasks: Vec<Task> = vec![];
-        for row in &conn.query("SELECT * from task order by id desc", &[]).unwrap() {
+        for row in &conn.query(LIST_SQL, &[]).unwrap() {
             tasks.push(Self::new(row));
         }
         tasks
     }
     
-    pub fn get(conn: PostgresPooledConnection,id:i32) -> Option<Task> {
-        for row in &conn.query("SELECT * from task where id=$1", &[&id]).unwrap() {
+    pub fn get(conn: Conn,id:i32) -> Option<Task> {
+        for row in &conn.query(GET_SQL, &[&id]).unwrap() {
             return Some(Self::new(row));
-        }
-        None 
+        } None 
     }
     
-    pub fn delete(conn:PostgresPooledConnection,id:i32){
-        conn.execute("delete from task where id=$1",&[&id]).unwrap();
+    pub fn delete(conn:Conn,id:i32){
+        conn.execute(DELETE_SQL,&[&id]).unwrap();
     }
-    pub fn save(conn:PostgresPooledConnection,task:&Task){
+    pub fn save(conn:Conn,task:&Task){
         if task.id>0 {
-            conn.execute("update task set name=$1,content=$2,update_time=$3,status=$4 where id=$5",&[&task.name,&task.content,&task.update_time,&task.status,&task.id]).unwrap();
+            conn.execute(UPDATE_SQL,&[&task.name,&task.content,&task.update_time,&task.status,&task.id]).unwrap();
         }else{
-            conn.execute("insert into task(name,content,create_time,update_time,status) values($1,$2,$3,$4,$5)",&[&task.name,&task.content,&task.create_time,&task.update_time,&task.status]).unwrap();
-        }   
+            conn.execute(CREATE_SQL,&[&task.name,&task.content,&task.create_time,&task.update_time,&task.status]).unwrap(); }   
     }
 }

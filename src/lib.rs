@@ -69,6 +69,7 @@ pub fn run(){
     router.get("/task/:id",task::edit);
     router.get("/task/delete/:id",task::delete);
     router.post("/task/",task::save);
+    router.post("/task/json-post",task::json_post);
 
     router.post("/account/login/",account::do_login);
     router.get("/account/login/",account::login);

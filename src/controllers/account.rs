@@ -1,13 +1,4 @@
-use iron::prelude::*;
-use std::collections::BTreeMap;
-use iron_login::User;
-use iron::modifiers::Redirect;
-use iron::{Url, status};
-use framework::database;
-
-use handlebars_iron::{Template};
-use utils::{response};
-use utils::request::*;
+use controllers::prelude::*;
 use models::account::Account;
 #[derive(Debug)]
 struct MyUser(String);

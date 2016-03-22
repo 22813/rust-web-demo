@@ -1,17 +1,5 @@
-use std::collections::BTreeMap;
-use std::str::FromStr;
-use rustc_serialize::json::{ToJson};
-use rustc_serialize::json;
-use chrono::*;
-use iron::prelude::*;
-use iron::{status};
-use handlebars_iron::{Template};
-
-use framework::database;
+use controllers::prelude::*;
 use models::task::Task;
-use utils::{response};
-use utils::request::*;
-use utils::crypto;
 
 pub fn list(req: &mut Request) -> IronResult<Response> {
     let tasks=Task::list(database::get_conn(req));
@@ -93,6 +81,31 @@ pub fn save(req: &mut Request) -> IronResult<Response> {
 }
 
 
+//curl --data-urlencode "data=NTDlhYMzMDDmnaEs5aSW6ZO+5Luj5Y+RLOmUmuaWh+acrA==" "http://localhost:8080/api"
+pub fn json_post(req: &mut Request) -> IronResult<Response> {
+    if let Some(s)=req.get_form_param("data"){
+        if let Some(data)=crypto::base64_decode_to_string(&s) {
+            if let Ok(data)=Json::from_str(&data) {
+                if let Some(obj)=data.as_object() {
+                    //let id=get_json_i64(&obj,"id");
+                    let manufactor=get_json_string(&obj,"manufactor");
+                    let id=get_json_i64(&obj,"id");
+                    println!("id:{}",id); 
+                    println!("manufactor:{:?}",manufactor);
+                }
+            }
+        }
+    }
+    Ok(Response::with(status::Ok))
+}
+
+fn get_json_string(obj:&BTreeMap<String,Json>,key:&str)->Option<String>{
+    obj.get(key).map(|json|json.as_string()).unwrap_or_else(||None).map(|str|str.to_owned())
+}
+
+fn get_json_i64(obj:&BTreeMap<String,Json>,key:&str)->i64{
+    obj.get(key).map(|json|json.as_i64()).unwrap_or_default().unwrap_or_default()
+}
 
 
 /*
