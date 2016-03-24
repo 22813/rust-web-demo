@@ -1,5 +1,5 @@
 use controllers::prelude::*;
-use services::*;
+use services::task as service;
 use models::*;
 
 pub fn init_router(router:&mut Router){
@@ -14,14 +14,14 @@ pub fn init_router(router:&mut Router){
     router.post("/task/json-post",json_post);
 }
 pub fn list(_: &mut Request) -> IronResult<Response> {
-    let tasks=task::list();
+    let tasks=service::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
     response::template("task-list",data)
 }
 
 pub fn list_json(_:&mut Request)->IronResult<Response>{
-    let tasks=task::list();
+    let tasks=service::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
     let data = json::encode(&data).unwrap();
@@ -29,7 +29,7 @@ pub fn list_json(_:&mut Request)->IronResult<Response>{
 }
 
 pub fn list_json_base64(_:&mut Request)->IronResult<Response>{
-    let tasks=task::list();
+    let tasks=service::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
     let data = json::encode(&data).unwrap();
@@ -37,7 +37,7 @@ pub fn list_json_base64(_:&mut Request)->IronResult<Response>{
     response::json_response(&data)
 }
 pub fn list_json_aes(_:&mut Request)->IronResult<Response>{
-    let tasks=task::list();
+    let tasks=service::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
     let data = json::encode(&data).unwrap();
@@ -54,7 +54,7 @@ pub fn delete(req: &mut Request) -> IronResult<Response> {
     let id=req.get_path_param("id").unwrap_or("0".to_owned());
     let id=i32::from_str(&*id).unwrap_or(0);
     if id>0{
-        task::delete(id);
+        service::delete(id);
     }
     response::redirect(req,"/task/")
 }
@@ -64,7 +64,7 @@ pub fn edit(req: &mut Request) -> IronResult<Response> {
     let mut response = Response::new();
     response.set_mut(status::Ok);
     if id>0{
-        let task=task::get(id);
+        let task=service::get(id);
         if let Some(task)=task {
             let mut data = BTreeMap::new();
             data.insert("task".to_string(), task.to_json());
@@ -88,7 +88,7 @@ pub fn save(req: &mut Request) -> IronResult<Response> {
         status:         i32::from_str(&*status).unwrap_or(0),
     };
     println!("saving task:{:?}",&task);
-    task::save(&task);
+    service::save(&task);
     response::redirect(req,"/task/")
 }
 
