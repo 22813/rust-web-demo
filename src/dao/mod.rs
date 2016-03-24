@@ -10,12 +10,15 @@ pub mod prelude {
     pub use postgres::rows::*;
     pub use r2d2::{Config,Pool, PooledConnection};
     pub use r2d2_postgres::{PostgresConnectionManager,SslMode};
-    pub type PostgresPool = Pool<PostgresConnectionManager>;
-    pub type PostgresPooledConnection = PooledConnection<PostgresConnectionManager>;
-    pub type Conn=PostgresPooledConnection;
+    pub type Conn = PooledConnection<PostgresConnectionManager>;
 
+    pub fn get_conn()->Conn{
+        let conn = POOL.get().unwrap();
+        conn
+    }
+    type PostgresPool = Pool<PostgresConnectionManager>;
     lazy_static! {
-        pub static ref POOL:PostgresPool  = connect_pool(); 
+        static ref POOL:PostgresPool  = connect_pool(); 
     }
     fn connect_pool()->PostgresPool{
         let manager = PostgresConnectionManager::new("postgres://postgres:123456@localhost:5432/mydb", SslMode::None).unwrap();
@@ -23,9 +26,5 @@ pub mod prelude {
         let pool=Pool::new(config, manager).unwrap();
         println!("Connected to postgres with pool: {:?}", pool);
         pool
-    }
-    pub fn get_conn()->Conn{
-        let conn = POOL.get().unwrap();
-        conn
     }
 }
