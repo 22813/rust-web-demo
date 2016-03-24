@@ -1,14 +1,25 @@
 use controllers::prelude::*;
 use models::task::Task;
 
-pub fn list(req: &mut Request) -> IronResult<Response> {
+pub fn init_router(router:&mut Router){
+    router.get("/task/",list);
+    router.get("/task/json/",list_json);
+    router.get("/task/json/aes/",list_json_aes);
+    router.get("/task/json/base64/",list_json_base64);
+    router.get("/task/new",new);
+    router.get("/task/:id",edit);
+    router.get("/task/delete/:id",delete);
+    router.post("/task/",save);
+    router.post("/task/json-post",json_post);
+}
+pub fn list(_: &mut Request) -> IronResult<Response> {
     let tasks=Task::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
     response::template("task-list",data)
 }
 
-pub fn list_json(req:&mut Request)->IronResult<Response>{
+pub fn list_json(_:&mut Request)->IronResult<Response>{
     let tasks=Task::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
@@ -16,7 +27,7 @@ pub fn list_json(req:&mut Request)->IronResult<Response>{
     response::json_response(&data)
 }
 
-pub fn list_json_base64(req:&mut Request)->IronResult<Response>{
+pub fn list_json_base64(_:&mut Request)->IronResult<Response>{
     let tasks=Task::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
@@ -24,7 +35,7 @@ pub fn list_json_base64(req:&mut Request)->IronResult<Response>{
     let data=crypto::base64_encode_string(&data).expect("");
     response::json_response(&data)
 }
-pub fn list_json_aes(req:&mut Request)->IronResult<Response>{
+pub fn list_json_aes(_:&mut Request)->IronResult<Response>{
     let tasks=Task::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());

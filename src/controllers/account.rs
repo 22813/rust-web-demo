@@ -1,20 +1,12 @@
 use controllers::prelude::*;
 use models::account::Account;
-#[derive(Debug)]
-struct MyUser(String);
-impl MyUser {
-    fn new(user_id: &str) -> MyUser {
-        MyUser(user_id.to_owned())
-    }
+
+pub fn init_router(router:&mut Router){
+    router.post("/account/login/",do_login);
+    router.get("/account/login/",login);
+    router.get("/account/logout/",logout);
 }
-impl User for MyUser {
-    fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
-        Some(MyUser(user_id.to_owned()))
-    }
-    fn get_user_id(&self) -> &str {
-        &self.0
-    }
-}
+
 pub fn logout(req: &mut Request) -> IronResult<Response> {
     let login = MyUser::get_login(req);
     let ref url=req.url;
@@ -50,4 +42,19 @@ pub fn do_login(req: &mut Request) -> IronResult<Response> {
     let mut data = BTreeMap::new();
     data.insert("error".to_string(),true);
     response::template("account-login",data)
+}
+#[derive(Debug)]
+struct MyUser(String);
+impl MyUser {
+    fn new(user_id: &str) -> MyUser {
+        MyUser(user_id.to_owned())
+    }
+}
+impl User for MyUser {
+    fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
+        Some(MyUser(user_id.to_owned()))
+    }
+    fn get_user_id(&self) -> &str {
+        &self.0
+    }
 }
