@@ -41,7 +41,7 @@ pub fn do_login(req: &mut Request) -> IronResult<Response> {
     let login = MyUser::get_login(req);
     let name=req.get_form_param("name");
     let password=req.get_form_param("password");
-    if let Some(account)=Account::get(database::get_conn(req),name,password) {
+    if let Some(account)=Account::get(name,password) {
         let mut response = Response::new().set(login.log_in(MyUser::new(&format!("{}",&account.id))));
         response.set_mut(Template::new("index","".to_owned()));
         response.set_mut(status::Ok);

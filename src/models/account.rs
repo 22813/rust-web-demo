@@ -14,8 +14,8 @@ impl Account {
         account.password=row.get("password");
         account
     }
-    pub fn get(conn:
-               Conn,name:Option<String>,password:Option<String>)->Option<Account>  {
+    pub fn get(name:Option<String>,password:Option<String>)->Option<Account>  {
+        let conn=get_conn();
         for row in &conn.query("SELECT * from account where name=$1 and password=$2", &[&name,&password]).unwrap() {
             return Some(Self::new(row));
         }

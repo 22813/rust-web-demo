@@ -17,5 +17,4 @@ pub mod prelude {
     pub use utils::crypto;
     pub use utils::{response};
     pub use utils::request::*;
-    pub use framework::database;
 }

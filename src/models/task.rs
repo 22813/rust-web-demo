@@ -42,27 +42,30 @@ impl Task {
         task.status=row.get("status");
         task
     }
-    pub fn list(conn: Conn) -> Vec<Task> {
+    pub fn list() -> Vec<Task> {
         let mut tasks: Vec<Task> = vec![];
+        let conn=get_conn();
         for row in &conn.query(LIST_SQL, &[]).unwrap() {
             tasks.push(Self::new(row));
         }
         tasks
     }
     
-    pub fn get(conn: Conn,id:i32) -> Option<Task> {
+    pub fn get(id:i32) -> Option<Task> {
+        let conn=get_conn();
         for row in &conn.query(GET_SQL, &[&id]).unwrap() {
             return Some(Self::new(row));
         } None 
     }
     
-    pub fn delete(conn:Conn,id:i32){
+    pub fn delete(id:i32){
+        let conn=get_conn();
         conn.execute(DELETE_SQL,&[&id]).unwrap();
     }
-    pub fn save(conn:Conn,task:&Task){
+    pub fn save(task:&Task){
         if task.id>0 {
-            conn.execute(UPDATE_SQL,&[&task.name,&task.content,&task.update_time,&task.status,&task.id]).unwrap();
+            get_conn().execute(UPDATE_SQL,&[&task.name,&task.content,&task.update_time,&task.status,&task.id]).unwrap();
         }else{
-            conn.execute(CREATE_SQL,&[&task.name,&task.content,&task.create_time,&task.update_time,&task.status]).unwrap(); }   
+            get_conn().execute(CREATE_SQL,&[&task.name,&task.content,&task.create_time,&task.update_time,&task.status]).unwrap(); }   
     }
 }

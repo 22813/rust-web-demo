@@ -20,6 +20,8 @@ extern crate hyper;
 extern crate chrono;
 extern crate iron_login;
 extern crate regex;
+#[macro_use]
+extern crate lazy_static;
 
 use iron::prelude::*;
 
@@ -34,10 +36,7 @@ use persistent::{Read};
 
 use handlebars_iron::{HandlebarsEngine};
 
-use r2d2::{Config,Pool};
-use r2d2_postgres::{PostgresConnectionManager,SslMode};
-
-use framework::{middleware,database};
+use framework::{middleware};
 use controllers::{task,account};
 
 use logger::Logger;
@@ -54,11 +53,6 @@ static FORMAT: &'static str = "@[red A]Uri: {uri}@, @[blue blink underline]Metho
 
 
 pub fn run(){
-    let manager = PostgresConnectionManager::new("postgres://postgres:123456@localhost:5432/mydb", SslMode::None).unwrap();
-    let config = Config::builder().pool_size(10).build();
-    let pool=Pool::new(config, manager).unwrap();
-
-    println!("Connected to postgres with pool: {:?}", pool);
 
     let mut router = Router::new();
 
@@ -81,8 +75,6 @@ pub fn run(){
     mount.mount("/static", Static::new(Path::new("./src/static/")));
 
     let mut chain = Chain::new(mount);
-    //chain.link(Write::<HitCounter>::both(0));
-    chain.link(Read::<database::AppDb>::both(pool));
     chain.link_after(HandlebarsEngine::new("./src/templates", ".hbs"));
 
     chain.link_before(middleware::MyMiddleware);
