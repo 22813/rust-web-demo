@@ -6,21 +6,18 @@ pub mod prelude {
     pub use chrono::*;
     pub use iron::prelude::*;
     pub use iron::typemap::Key;
-
     pub use postgres::rows::*;
-    pub use r2d2::{Config,Pool, PooledConnection};
-    pub use r2d2_postgres::{PostgresConnectionManager,SslMode};
-    pub type Conn = PooledConnection<PostgresConnectionManager>;
 
-    pub fn get_conn()->Conn{
+    use r2d2::{Config,Pool, PooledConnection};
+    use r2d2_postgres::{PostgresConnectionManager,SslMode};
+    pub fn get_conn()->PooledConnection<PostgresConnectionManager>{
         let conn = POOL.get().unwrap();
         conn
     }
-    type PostgresPool = Pool<PostgresConnectionManager>;
     lazy_static! {
-        static ref POOL:PostgresPool  = connect_pool(); 
+        static ref POOL:Pool<PostgresConnectionManager>  = connect_pool(); 
     }
-    fn connect_pool()->PostgresPool{
+    fn connect_pool()->Pool<PostgresConnectionManager>{
         let manager = PostgresConnectionManager::new("postgres://postgres:123456@localhost:5432/mydb", SslMode::None).unwrap();
         let config = Config::builder().pool_size(10).build();
         let pool=Pool::new(config, manager).unwrap();

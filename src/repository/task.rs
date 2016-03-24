@@ -1,11 +1,11 @@
 use super::prelude::*;
 use models::*;
 
-const DELETE_SQL:&'static str="delete from task where id=$1";
-const LIST_SQL:&'static str="SELECT * from task order by id desc";
-const GET_SQL:&'static str="SELECT * from task where id=$1";
-const UPDATE_SQL:&'static str="update task set name=$1,content=$2,update_time=$3,status=$4 where id=$5";
-const CREATE_SQL:&'static str="insert into task(name,content,create_time,update_time,status) values($1,$2,$3,$4,$5)";
+const DELETE_SQL    :&'static str="delete from task where id=$1";
+const LIST_SQL      :&'static str="SELECT * from task order by id desc";
+const GET_SQL       :&'static str="SELECT * from task where id=$1";
+const UPDATE_SQL    :&'static str="update task set name=$1,content=$2,update_time=$3,status=$4 where id=$5";
+const CREATE_SQL    :&'static str="insert into task(name,content,create_time,update_time,status) values($1,$2,$3,$4,$5)";
 
 fn new(row:Row)->Task{
     let mut task = Task::default();

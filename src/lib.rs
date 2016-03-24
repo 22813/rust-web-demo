@@ -28,12 +28,15 @@ pub mod repository;
 pub mod models;
 pub mod utils;
 pub mod services;
+pub mod schedule;
 
 
 pub fn run(){
     use controllers;
     use iron::prelude::*;
     use std::net::*;
+    use schedule;
+    schedule::init();
     let chain=controllers::prelude::get_chain();
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);
     println!("Listening on http://{}", host);
