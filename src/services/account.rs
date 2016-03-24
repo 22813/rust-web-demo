@@ -1,6 +1,6 @@
-use dao::account as account_dao;
+use repository::account as repos;
 use models::*;
 
 pub fn get(name:Option<String>,password:Option<String>)->Option<Account>  {
-   account_dao::get(name,password)
+   repos::get(name,password)
 }

@@ -1,4 +1,4 @@
-use dao::prelude::*;
+use repository::prelude::*;
 use models::*;
 
 const DELETE_SQL:&'static str="delete from task where id=$1";

@@ -1,4 +1,4 @@
-use dao::prelude::*;
+use repository::prelude::*;
 use models::*;
 
 fn new(row:Row)->Account{

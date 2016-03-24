@@ -24,7 +24,7 @@ extern crate regex;
 extern crate lazy_static;
 
 pub mod controllers;
-pub mod dao;
+pub mod repository;
 pub mod models;
 pub mod utils;
 pub mod services;
