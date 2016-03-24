@@ -1,4 +1,4 @@
-use controllers::prelude::*;
+use super::prelude::*;
 use services::account as service;
 
 pub fn init_router(router:&mut Router){

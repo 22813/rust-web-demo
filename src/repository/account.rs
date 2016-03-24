@@ -1,4 +1,4 @@
-use repository::prelude::*;
+use super::prelude::*;
 use models::*;
 
 fn new(row:Row)->Account{
