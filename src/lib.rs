@@ -1,14 +1,11 @@
 extern crate postgres;
-//extern crate rand;
 extern crate rustc_serialize;
-
 extern crate iron;
 extern crate persistent;
 extern crate router;
 extern crate mount;
 extern crate urlencoded;
 extern crate staticfile;
-
 extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate time;
@@ -32,9 +29,9 @@ pub mod schedule;
 
 
 pub fn run(){
-    use controllers;
     use iron::prelude::*;
     use std::net::*;
+    use controllers;
     use schedule;
     schedule::init();
     let chain=controllers::prelude::get_chain();

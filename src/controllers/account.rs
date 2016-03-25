@@ -54,7 +54,9 @@ impl User for MyUser {
     fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
         Some(MyUser(user_id.to_owned()))
     }
-    fn get_user_id(&self) -> &str {
-        &self.0
+    fn get_user_id(&self) -> String {
+        let mut s=String::new();
+        s.push_str(&self.0);
+        s
     }
 }
