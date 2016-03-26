@@ -1,16 +1,12 @@
 pub mod task;
 pub mod account;
 pub mod prelude {
-    pub use std::collections::BTreeMap;
-    pub use rustc_serialize::json::{ToJson, Json};
-    pub use chrono::*;
-    pub use iron::prelude::*;
-    pub use iron::typemap::Key;
     pub use postgres::rows::*;
+    pub use postgres::types::ToSql;
 
     use r2d2::{Config,Pool, PooledConnection};
     use r2d2_postgres::{PostgresConnectionManager,SslMode};
-    pub fn get_conn()->PooledConnection<PostgresConnectionManager>{
+    fn get_conn()->PooledConnection<PostgresConnectionManager>{
         let conn = POOL.get().unwrap();
         conn
     }
@@ -23,5 +19,31 @@ pub mod prelude {
         let pool=Pool::new(config, manager).unwrap();
         println!("Connected to postgres with pool: {:?}", pool);
         pool
+    }
+
+    pub trait Row2Model{
+        fn convert(row:Row)->Self;
+    }
+
+    pub fn find_one<T>(query: &str, params: &[&ToSql])->Option<T> where T:Row2Model{
+        let conn=get_conn();
+        for row in &conn.query(query, params).unwrap() {
+            return Some(T::convert(row));
+        }
+        None
+    }
+    pub fn find_list<T>(query: &str, params: &[&ToSql])->Vec<T> where T:Row2Model{
+        let mut result: Vec<T> = vec![];
+        let conn=get_conn();
+        for row in &conn.query(query, params).unwrap() {
+            result.push(T::convert(row));
+        }
+        result
+    }
+
+    // return: the number of rows modified
+    pub fn execute(query: &str, params: &[&ToSql])->u64{
+        let conn=get_conn();
+        conn.execute(query,params).unwrap()
     }
 }

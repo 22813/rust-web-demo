@@ -22,20 +22,14 @@ pub mod prelude {
     use std::path::Path;
     use iron::{AroundMiddleware,Handler,typemap};
     use handlebars_iron::{HandlebarsEngine};
-    use controllers;
     use logger::Logger;
-    use logger::format::Format;
-    use logger::format::FormatAttr::FunctionAttrs;
-    use term;
     use mount::Mount;
     use staticfile::Static;
-    static FORMAT: &'static str = "@[red A]Uri: {uri}@, @[blue blink underline]Method: {method}@, @[yellow standout]Status: {status}@, @[brightgreen]Time: {response-time}@";
-
 
     pub fn get_chain()->Chain{
         let mut router = Router::new();
-        controllers::task::init_router(&mut router);
-        controllers::account::init_router(&mut router);
+        super::task::init_router(&mut router);
+        super::account::init_router(&mut router);
 
         let mut mount = Mount::new();
         mount.mount("/", router);
@@ -45,16 +39,7 @@ pub mod prelude {
         chain.link_after(HandlebarsEngine::new("./src/templates", ".hbs"));
         chain.link_around(LoginChecker);
         chain.link_around(iron_login::LoginManager::new(b"My Secret Key"[..].to_owned()));
-
-        fn attrs(req: &Request, _res: &Response) -> Vec<term::Attr> {
-            match format!("{}", req.url).as_ref() {
-                "/" => vec![term::Attr::Blink],
-                _ => vec![]
-            }
-        }
-
-        let format = Format::new(FORMAT, vec![], vec![FunctionAttrs(attrs)]);
-        chain.link(Logger::new(Some(format.unwrap())));
+        chain.link(Logger::new(None));
         chain
     }
 
@@ -66,7 +51,7 @@ pub mod prelude {
             struct LoggerHandler<H: Handler> {  handler: H }
             impl<H: Handler> Handler for LoggerHandler<H> {
                 fn handle(&self, req: &mut Request) -> IronResult<Response> {
-                    if controllers::account::check_login(req) || req.url.path.join("/").contains("account") {
+                    if super::account::check_login(req) || req.url.path.join("/").contains("account") {
                         let res = self.handler.handle(req);
                         return res;
                     }
