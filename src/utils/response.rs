@@ -2,7 +2,7 @@ use iron::prelude::*;
 use iron::modifiers::Redirect;
 use iron::{Url, status};
 use rustc_serialize::json::{ToJson};
-use handlebars_iron::{Template};
+use hbs::{Template};
 //use hyper::header::{ContentType};
 //use hyper::mime::{Mime, TopLevel, SubLevel, Attr, Value};
 

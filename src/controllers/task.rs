@@ -17,7 +17,7 @@ pub fn list(_: &mut Request) -> IronResult<Response> {
     let tasks=service::list();
     let mut data = BTreeMap::new();
     data.insert("tasks".to_string(), tasks.to_json());
-    response::template("task-list",data)
+    response::template("task/list",data)
 }
 
 pub fn list_json(_:&mut Request)->IronResult<Response>{
@@ -48,7 +48,7 @@ pub fn list_json_aes(_:&mut Request)->IronResult<Response>{
 }
 
 pub fn new(_: &mut Request) -> IronResult<Response> {
-    response::template("task-new","".to_owned())
+    response::template("task/new","".to_owned())
 }
 pub fn delete(req: &mut Request) -> IronResult<Response> {
     let id=req.get_path_param("id").unwrap_or("0".to_owned());
@@ -68,7 +68,7 @@ pub fn edit(req: &mut Request) -> IronResult<Response> {
         if let Some(task)=task {
             let mut data = BTreeMap::new();
             data.insert("task".to_string(), task.to_json());
-            response.set_mut(Template::new("task-edit", data));
+            response.set_mut(Template::new("task/edit", data));
         }
     }
     Ok(response)

@@ -25,8 +25,8 @@ pub fn check_login(req:&mut Request)->bool{
 
 pub fn login(_: &mut Request) -> IronResult<Response> {
     let mut data = BTreeMap::new();
-    data.insert("error".to_string(),"".to_owned());
-    response::template("account-login",data)
+    data.insert("error".to_string(),false);
+    response::template("account/login",data)
 }
 
 pub fn do_login(req: &mut Request) -> IronResult<Response> {
