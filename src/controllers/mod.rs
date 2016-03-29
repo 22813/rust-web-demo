@@ -47,8 +47,7 @@ pub mod prelude {
             panic!("{:?}", r);
         }
         chain.link_after(hbse);
-        chain.link_after(ErrorReporter);
-        chain.link_after(Custom404);
+        chain.link_after(ErrorHandler);
 
         chain.link_around(LoginChecker);
         chain.link_around(iron_login::LoginManager::new(b"My Secret Key"[..].to_owned()));
@@ -74,21 +73,13 @@ pub mod prelude {
             Box::new(LoggerHandler {handler:handler }) as Box<Handler>
         }
     }
-    struct ErrorReporter;
-    impl AfterMiddleware for ErrorReporter {
+    struct ErrorHandler;
+    impl AfterMiddleware for ErrorHandler {
         fn catch(&self, _: &mut Request, err: IronError) -> IronResult<Response> {
-            //println!("{}", err.description());
-            println!("{:?}", err);
-            Err(err)
-        }
-    }
-    struct Custom404;
-    impl AfterMiddleware for Custom404 {
-        fn catch(&self, _: &mut Request, err: IronError) -> IronResult<Response> {
-            println!("Hitting custom 404 middleware");
             if let Some(_) = err.error.downcast::<NoRoute>() {
                 Ok(Response::with((status::NotFound, "Custom 404 response")))
             } else {
+                println!("{:?}", err);
                 Err(err)
             }
         }
