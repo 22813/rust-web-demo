@@ -14,6 +14,6 @@ pub fn init() {
 }
 
 fn work(){
-    println!("schedule working .....");
+    //println!("schedule working .....");
 }
 

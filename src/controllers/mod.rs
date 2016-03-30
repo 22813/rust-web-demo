@@ -27,10 +27,7 @@ pub mod prelude {
 
     pub fn get_chain()->Chain{
         let mut router = Router::new();
-        fn index(_: &mut Request) -> IronResult<Response> {
-            response::template("index",())
-        }
-        router.get("/",index);
+        router.get("/",|_:&mut Request| response::template("index",()));
         super::task::init_router(&mut router);
         super::account::init_router(&mut router);
 
