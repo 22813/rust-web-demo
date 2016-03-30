@@ -19,6 +19,7 @@ extern crate iron_login;
 extern crate regex;
 #[macro_use]
 extern crate lazy_static;
+extern crate config;
 
 pub mod controllers;
 pub mod repository;

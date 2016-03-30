@@ -9,9 +9,13 @@ pub mod prelude {
         fn convert(row:Row)->Self;
     }
 }
+use std::path::Path;
 use r2d2::{Config,Pool, PooledConnection};
 use r2d2_postgres::{PostgresConnectionManager,SslMode};
 use self::prelude::*;
+use config::reader;
+
+
 
 fn get_conn()->PooledConnection<PostgresConnectionManager>{
     let conn = POOL.get().unwrap();
@@ -21,7 +25,16 @@ lazy_static! {
     static ref POOL:Pool<PostgresConnectionManager>  = connect_pool(); 
 }
 fn connect_pool()->Pool<PostgresConnectionManager>{
-    let manager = PostgresConnectionManager::new("postgres://postgres:123456@localhost:5432/mydb", SslMode::None).unwrap();
+    let config = reader::from_file(Path::new("./web-root/config/web.conf")).unwrap();
+    let host = config.lookup_str("database.host").unwrap();
+    let port = config.lookup_str("database.port").unwrap();
+    let user_name = config.lookup_str("database.user_name").unwrap();
+    let password = config.lookup_str("database.password").unwrap();
+    let db_name = config.lookup_str("database.db_name").unwrap();
+
+    let connect_str=format!("postgres://{}:{}@{}:{}/{}",user_name,password,host,port,db_name);
+    let manager = PostgresConnectionManager::new(connect_str.as_str(), SslMode::None).unwrap();
+
     let config = Config::builder().pool_size(10).build();
     let pool=Pool::new(config, manager).unwrap();
     println!("Connected to postgres with pool: {:?}", pool);
