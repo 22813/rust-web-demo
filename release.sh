@@ -15,4 +15,4 @@ cp target/release/rust_web_demo $RUNTIME_DIR/$EXE
 cp -R web-root $RUNTIME_DIR/web-root
 
 cd ~/$SERVER/runtime
-nohup ./$EXE > ~/$SERVER/output.log 2>&1 &]
+nohup ./$EXE > ~/$SERVER/output.log 2>&1 &
