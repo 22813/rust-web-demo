@@ -1,5 +1,5 @@
 [package]
-name = "iron_web_demo"
+name = "rust_web_demo"
 version = "0.1.0"
 description = " Rust web demo based on iron"
 readme = "README.md"
