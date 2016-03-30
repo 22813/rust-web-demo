@@ -34,7 +34,7 @@ pub fn run(){
     use controllers;
     use schedule;
     schedule::init();
-    let chain=controllers::prelude::get_chain();
+    let chain=controllers::get_chain();
     let host = SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8080);
     println!("Listening on http://{}", host);
     Iron::new(chain).http(host).unwrap();

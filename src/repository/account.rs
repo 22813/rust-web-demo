@@ -12,5 +12,5 @@ impl Row2Model for Account{
 }
 
 pub fn get(name:Option<String>,password:Option<String>)->Option<Account>  {
-    find_one("SELECT * from account where name=$1 and password=$2", &[&name,&password])
+    super::find_one("SELECT * from account where name=$1 and password=$2", &[&name,&password])
 }

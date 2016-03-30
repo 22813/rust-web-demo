@@ -20,20 +20,20 @@ impl Row2Model for Task {
     }
 }
 pub fn list() -> Vec<Task> {
-    find_list(LIST_SQL,&[])
+    super::find_list(LIST_SQL,&[])
 }
 
 pub fn get(id:i32) -> Option<Task> {
-    find_one(GET_SQL, &[&id])
+    super::find_one(GET_SQL, &[&id])
 }
 pub fn delete(id:i32){
-    execute(DELETE_SQL,&[&id]);
+    super::execute(DELETE_SQL,&[&id]);
 }
 pub fn save(task:&Task){
     let params:&[&ToSql]=&[&task.create_time,&task.name,&task.content,&task.update_time,&task.status,&task.id];
     if task.id>0 {
-        execute(UPDATE_SQL,&params[1..]);
+        super::execute(UPDATE_SQL,&params[1..]);
     }else{
-        execute(CREATE_SQL,&params[..5]);
+        super::execute(CREATE_SQL,&params[..5]);
     }   
 }
