@@ -3,8 +3,8 @@ use iron::modifiers::Redirect;
 use iron::{Url, status};
 use rustc_serialize::json::{ToJson};
 use hbs::{Template};
-//use hyper::header::{ContentType};
-//use hyper::mime::{Mime, TopLevel, SubLevel, Attr, Value};
+use hyper::header::{ContentType};
+use hyper::mime::{Mime, TopLevel, SubLevel, Attr, Value};
 
 pub fn redirect(req:&Request,path:&str)->IronResult<Response>{
     let ref url=req.url;
@@ -24,7 +24,7 @@ pub fn json_response(data:&str)->IronResult<Response>{
     //let mut headers = Headers::new();
     //headers.set( ContentType(Mime(TopLevel::Application, SubLevel::Json, vec![(Attr::Charset, Value::Utf8)])));
     //response.headers=headers; 
-    //response.headers.set(ContentType(Mime(TopLevel::Application,SubLevel::Json,vec![(Attr::Charset,Value::Utf8)])));
+    response.headers.set(ContentType(Mime(TopLevel::Application,SubLevel::Json,vec![(Attr::Charset,Value::Utf8)])));
     //response.headers.set(Cookie(vec![CookiePair::new("foo".to_owned(),"bar".to_owned())]));
     Ok(response)
 }

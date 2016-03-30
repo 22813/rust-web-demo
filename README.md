@@ -15,13 +15,13 @@ $ uname -a
 $ git clone https://github.com/hikelee/rust-web-demo.git
 
 $ cd rust-web-demo
-$ cat src/sql/init.sql
+$ cat web-root/sql/init.sql
 
 $ cargo run
 ```
 
 ### test 
 ```sh
-$ firefox http://localhost:8080/task/
+$ firefox http://localhost:8080/
 
 ```
