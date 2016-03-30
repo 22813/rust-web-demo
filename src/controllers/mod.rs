@@ -33,12 +33,12 @@ pub fn get_chain()->Chain{
     self::account::init_router(&mut router);
 
     let mut mount = Mount::new();
-    mount.mount("/", router).mount("/static", Static::new(Path::new("./include/static/")));
+    mount.mount("/", router).mount("/static", Static::new(Path::new("./web-root/static/")));
 
     let mut chain = Chain::new(mount);
 
     let mut hbse = HandlebarsEngine::new();
-    hbse.add(Box::new(DirectorySource::new("./include/templates/", ".hbs")));
+    hbse.add(Box::new(DirectorySource::new("./web-root/templates/", ".hbs")));
     if let Err(r) = hbse.reload() {
         panic!("{:?}", r);
     }
