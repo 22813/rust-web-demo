@@ -3,27 +3,25 @@ pub mod account;
 
 use iron_login;
 use std::path::Path;
-use iron::{AfterMiddleware,AroundMiddleware,Handler,typemap};
+use iron::{AfterMiddleware,AroundMiddleware,Handler};
 use logger::Logger;
 use mount::Mount;
 use staticfile::Static;
 use self::prelude::*;
 
 pub mod prelude {
+    pub use router::{Router,NoRoute};
     pub use std::str::FromStr;
     pub use std::collections::BTreeMap;
     pub use rustc_serialize::json;
     pub use rustc_serialize::json::{Json,ToJson};
-    pub use hbs::{Template, HandlebarsEngine, DirectorySource, MemorySource};
     pub use chrono::*;
+    pub use hbs::{Template, HandlebarsEngine, DirectorySource, MemorySource};
     pub use iron::prelude::*;
-    pub use iron_login::User;
     pub use iron::{Url, status};
     pub use iron::modifiers::Redirect;
-    pub use utils::crypto;
     pub use utils::{response};
     pub use utils::request::*;
-    pub use router::{Router,NoRoute};
 }
 
 pub fn get_chain()->Chain{
@@ -51,7 +49,6 @@ pub fn get_chain()->Chain{
 }
 
 struct LoginChecker;
-impl typemap::Key for LoginChecker{type Value=u64;}
 impl AroundMiddleware for LoginChecker {
     fn around(self, handler: Box<Handler>) -> Box<Handler> {
         struct LoggerHandler<H: Handler> {  handler: H }
