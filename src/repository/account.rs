@@ -1,5 +1,6 @@
-use super::prelude::*;
+use postgres::rows::*;
 use models::Account;
+use super::Row2Model;
 
 impl Row2Model for Account{
     fn convert(row:Row)->Account{

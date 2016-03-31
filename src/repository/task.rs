@@ -1,5 +1,7 @@
-use super::prelude::*;
+use postgres::rows::*;
+use postgres::types::ToSql;
 use models::Task;
+use super::Row2Model;
 
 const DELETE_SQL    :&'static str="delete from task where id=$1";
 const LIST_SQL      :&'static str="SELECT * from task order by id desc";

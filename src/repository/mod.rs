@@ -1,20 +1,16 @@
 pub mod task;
 pub mod account;
 
-pub mod prelude {
-    pub use postgres::rows::*;
-    pub use postgres::types::ToSql;
-
-    pub trait Row2Model{
-        fn convert(row:Row)->Self;
-    }
-}
+use postgres::rows::*;
+use postgres::types::ToSql;
 use std::path::Path;
 use r2d2::{Config,Pool, PooledConnection};
 use r2d2_postgres::{PostgresConnectionManager,SslMode};
-use self::prelude::*;
 use config::reader;
 
+pub trait Row2Model{
+    fn convert(row:Row)->Self;
+}
 
 
 fn get_conn()->PooledConnection<PostgresConnectionManager>{
