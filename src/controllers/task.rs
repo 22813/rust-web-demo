@@ -19,7 +19,7 @@ pub fn init_router(router:&mut Router){
             let mut data = BTreeMap::new();
             data.insert("tasks".to_string(), tasks.to_json());
             let data = json::encode(&data).unwrap();
-            response::json_response(&data)
+            response::ok_json(&data)
         });
 
         router.get("/task/json/aes/",|_:&mut Request|{
@@ -30,7 +30,7 @@ pub fn init_router(router:&mut Router){
             let data=crypto::aes_encrypt_string(&data);
             let data=crypto::base64_encode_bytes(&data.ok().unwrap());
             let data=data.expect("");
-            response::json_response(&data)
+            response::ok(&data)
         });
 
         router.get("/task/json/base64/",|_:&mut Request|{
@@ -39,7 +39,7 @@ pub fn init_router(router:&mut Router){
             data.insert("tasks".to_string(), tasks.to_json());
             let data = json::encode(&data).unwrap();
             let data=crypto::base64_encode_string(&data).expect("");
-            response::json_response(&data)
+            response::ok(&data)
         });
 
         router.get("/task/new",|_:&mut Request|response::template("task/new",()));
