@@ -6,7 +6,7 @@ git pull
 
 cargo build --release
 
-ps aux | grep "$EXE" | grep -v grep| awk '{print [}'| xargs kill -9
+ps aux | grep "$EXE" | grep -v grep| awk '{print $2}'| xargs kill -9
 
 rm -Rf $RUNTIME_DIR
 mkdir $RUNTIME_DIR
@@ -16,3 +16,4 @@ cp -R web-root $RUNTIME_DIR/web-root
 
 cd ~/$SERVER/runtime
 nohup ./$EXE > ~/$SERVER/output.log 2>&1 &
+
