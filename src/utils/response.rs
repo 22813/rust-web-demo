@@ -15,16 +15,18 @@ pub fn template<T: ToJson>(name: &str, value: T) ->IronResult<Response>{
     let mut response = Response::new();
     response.set_mut(Template::new(name,value));
     response.set_mut(status::Ok);
+    response.headers.set(ContentType(Mime(TopLevel::Text,SubLevel::Html,vec![(Attr::Charset,Value::Utf8)])));
     Ok(response)
 }
-pub fn json_response(data:&str)->IronResult<Response>{
+pub fn ok_json(data:&str)->IronResult<Response>{
     let mut response = Response::new();
-    response.set_mut(status::Ok);
-    response.set_mut(data);
-    //let mut headers = Headers::new();
-    //headers.set( ContentType(Mime(TopLevel::Application, SubLevel::Json, vec![(Attr::Charset, Value::Utf8)])));
-    //response.headers=headers; 
+    response.set_mut(status::Ok).set_mut(data);
     response.headers.set(ContentType(Mime(TopLevel::Application,SubLevel::Json,vec![(Attr::Charset,Value::Utf8)])));
-    //response.headers.set(Cookie(vec![CookiePair::new("foo".to_owned(),"bar".to_owned())]));
+    Ok(response)
+}
+pub fn ok(data:&str)->IronResult<Response>{
+    let mut response = Response::new();
+    response.set_mut(status::Ok).set_mut(data);
+    response.headers.set(ContentType(Mime(TopLevel::Text,SubLevel::Plain,vec![(Attr::Charset,Value::Utf8)])));
     Ok(response)
 }
