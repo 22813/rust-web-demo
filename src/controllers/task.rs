@@ -3,6 +3,25 @@ use utils::crypto;
 use services::task as service;
 use models::*;
 use super::prelude::*;
+use std::collections::BTreeMap;
+use rustc_serialize::json::{ToJson, Json};
+
+impl ToJson for Task {
+    fn to_json(&self) -> Json {
+        let mut m: BTreeMap<String, Json> = BTreeMap::new();
+        m.insert("id".to_string(), self.id.to_json());
+        m.insert("name".to_string(), self.name.to_json());
+        m.insert("content".to_string(), self.content.to_json());
+        if let Some(dt)=self.create_time{
+            m.insert("create_time".to_string(),dt.format("%Y-%m-%d %H:%M:%S").to_string().to_json());
+        }
+        if let Some(dt)=self.update_time{
+            m.insert("update_time".to_string(),dt.format("%Y-%m-%d %H:%M:%S").to_string().to_json());
+        }
+        m.insert("status".to_string(), self.status.to_json());
+        m.to_json()
+    }
+}
 
 static START: Once = ONCE_INIT;
 pub fn init_router(router:&mut Router){
