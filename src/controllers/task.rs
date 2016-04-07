@@ -3,8 +3,6 @@ use utils::crypto;
 use services::task as service;
 use models::*;
 use super::prelude::*;
-use std::collections::BTreeMap;
-use rustc_serialize::json::{ToJson, Json};
 
 impl ToJson for Task {
     fn to_json(&self) -> Json {
