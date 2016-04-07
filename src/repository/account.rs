@@ -1,8 +1,7 @@
 use postgres::rows::*;
 use models::Account;
-use super::Row2Model;
 
-impl Row2Model for Account{
+impl super::Row2Model for Account{
     fn convert(row:Row)->Account{
         let mut account = Account::default();
         account.id      = row.get("id");
