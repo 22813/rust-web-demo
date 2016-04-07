@@ -1,7 +1,6 @@
 use postgres::rows::*;
 use postgres::types::ToSql;
 use models::Task;
-use super::Row2Model;
 
 const DELETE_SQL    :&'static str="delete from task where id=$1";
 const LIST_SQL      :&'static str="SELECT * from task order by id desc";
@@ -9,7 +8,7 @@ const GET_SQL       :&'static str="SELECT * from task where id=$1";
 const UPDATE_SQL    :&'static str="update task set name=$1,content=$2,update_time=$3,status=$4 where id=$5";
 const CREATE_SQL    :&'static str="insert into task(create_time,name,content,update_time,status) values($1,$2,$3,$4,$5)";
 
-impl Row2Model for Task {
+impl super::Row2Model for Task {
     fn convert(row:Row)->Task{
         let mut task = Task::default();
         task.id             = row.get("id");
