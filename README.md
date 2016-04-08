@@ -24,6 +24,7 @@ $ cargo run
 
 ### test 
 ```sh
+#go to below url, login with admin/admin
 $ chrome http://localhost:8080/
 
 ```
