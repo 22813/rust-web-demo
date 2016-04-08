@@ -1,5 +1,5 @@
-extern crate rust_web_demo as demo;
+extern crate rust_web_demo as app;
 
 fn main(){
-    demo::run(); 
+    app::run(); 
 }
