@@ -15,6 +15,8 @@ $ uname -a
 $ git clone https://github.com/hikelee/rust-web-demo.git
 
 $ cd rust-web-demo
+
+#run init.sql in postgresql client to init table/data
 $ cat web-root/sql/init.sql
 
 $ cargo run
@@ -22,6 +24,6 @@ $ cargo run
 
 ### test 
 ```sh
-$ firefox http://localhost:8080/
+$ chrome http://localhost:8080/
 
 ```
